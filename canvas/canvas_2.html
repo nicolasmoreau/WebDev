@@ -127,6 +127,10 @@
 				sprites[i].plot();
 			}
 		}
+        
+        function mousemove(evt){
+            player.x = evt.clientX;
+        }
 		
 		function animate(){             
 			context.clearRect(0, 0, screen.width, screen.height);
@@ -141,6 +145,7 @@
 			
 		}   		
 		window.addEventListener('keydown',function(evt){doKeyDown(evt, player)},false);
+        window.addEventListener('mousemove',mousemove,false);
 		window.onload=function(){
 			init();
 		}
