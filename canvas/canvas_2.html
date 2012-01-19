@@ -25,7 +25,17 @@
 			context.fillStyle = this.color;			
 		}
 		
-		Square.prototype = new Sprite;
+		function SelfMovingSprite(){}
+		SelfMovingSprite.prototype = new Sprite;		
+		SelfMovingSprite.prototype.move = function(){return true;};	
+		function LinearSprite(){}
+		LinearSprite.prototype = new SelfMovingSprite();
+		LinearSprite.prototype.move = function(){
+			if(this.x + this.width < screen.width )
+				this.x = this.x+1;
+		}
+		
+		Square.prototype = new LinearSprite;
 		
 		function Square(){
 			this.width = 20;
@@ -41,7 +51,7 @@
 			else context.fill();
 		}	
 		
-		Circle.prototype = new Sprite();
+		Circle.prototype = new LinearSprite();
 		
 		function Circle(){
 			this.radius = 20;			
@@ -107,25 +117,6 @@
 			}
 		}
 		
-		var square = new Square;	
-		var square2 = new Square;
-		square2.y = 100;
-		square2.isFull = true;
-		var circle = new Circle;
-		circle.y = 50;
-		var player = new Player;		
-		var sprites = new Array(square, square2, circle, player);
-		
-		/*
-		function deplacement(sprite){
-			double angle = atan2(target.y-position.y, target.x-position.x);
-			double xVel = speed*cos(angle);
-			double yVel = speed*sin(angle);	
-			sprite.x = sprite.x + xVel;
-			sprite.y = sprite.y + yVel;
-		}*/
-
-
 		function init(){
 			canvas = document.getElementById("canvas");
 			context = canvas.getContext("2d");
@@ -137,6 +128,13 @@
 				sprites[i].plot();
 			}
 		}
+		
+		function moveSprites(){
+			for(var i = 0; i<sprites.length; i++){
+				if(sprites[i] instanceof SelfMovingSprite)
+					sprites[i].move();
+			}
+		}
         
         function mousemove(evt){
             player.setX(evt.clientX);
@@ -145,15 +143,21 @@
 		function animate(){             
 			context.clearRect(0, 0, screen.width, screen.height);
 			// draw
-			
-			if(square.x + square.width < screen.width){
-				square.x = square.x+1;
-				square2.x = square2.x +1;
-				circle.x = circle.x +1;
-			}
+			moveSprites();
 			plotSprites();
 			
 		}   		
+		
+		
+		var square = new Square;	
+		var square2 = new Square;
+		square2.y = 100;
+		square2.isFull = true;
+		var circle = new Circle;
+		circle.y = 50;
+		var player = new Player;		
+		var sprites = new Array(square, square2, circle, player);
+		
 		window.addEventListener('keydown',function(evt){doKeyDown(evt, player)},false);
         window.addEventListener('mousemove',mousemove,false);
 		window.onload=function(){
