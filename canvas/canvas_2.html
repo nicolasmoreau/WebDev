@@ -71,6 +71,16 @@
 			context.rect(this.x, this.y, this.width, this.height);
 			context.fill();
 		}
+        
+        Player.prototype.setX = function(x){
+            if(x + this.width < screen.width && x > 0)
+                this.x = x;
+        }
+        
+        Player.prototype.setY = function(y){
+            if(y + this.height < screen.heigth && this.y > 0)
+                this.y = y;
+        }
 		
 		function doKeyDown(evt, sprite){
 			switch (evt.keyCode) {
@@ -129,7 +139,7 @@
 		}
         
         function mousemove(evt){
-            player.x = evt.clientX;
+            player.setX(evt.clientX);
         }
 		
 		function animate(){             
