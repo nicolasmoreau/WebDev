@@ -78,17 +78,19 @@ var square2 = new Square;
 square2.y = 100;
 square2.isFull  = true;
 var circle = new Circle;
-circle.y = 50;
-
-var fleeing = new FleeingSquare;
-fleeing.x = 50;
-fleeing.y = 50;
+circle.y = 50;                   
 
 //sprite moved by user
 var player = new Player;		
 
+var fleeing = new FleeingSquare(player);
+fleeing.opponent = player;
+fleeing.x = 300;
+fleeing.y = 300;
+
 //list of all sprites
-var sprites = new Array(square, square2, circle, player, fleeing);  
+//var sprites = new Array(square, square2, circle, player, fleeing);
+var sprites = new Array(player, fleeing);  
 var log;
 
 

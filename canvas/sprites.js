@@ -47,12 +47,39 @@ Square.prototype.plot = function(){
 	else context.fill();
 }	
 
-function FleeingSquare(){};
-FleeingSquare.prototype = new Square();
-FleeingSquare.prototype.distance = function(sprite){
-  //log.message("test : "+this.x+ " "+sprite.x);
-  var distance = Math.sqrt(Math.pow(this.x - sprite.x, 2)+Math.pow(this.y - sprite.y, 2));
-  log.message(distance);
+FleeingSquare.prototype = new Square;
+        
+function FleeingSquare(){
+  this.opponent;
+  this.enabled = false;
+};    
+  
+FleeingSquare.prototype.distance = function(){
+  var distance = Math.sqrt(Math.pow(this.x - this.opponent.x, 2)+Math.pow(this.y - this.opponent.y, 2));
+  return distance;    
+}
+
+FleeingSquare.prototype.move = function(){   
+  var distance = this.distance();
+  
+  if( distance < 50 || this.enabled == true){
+    var angleDegre = 2;
+    if(this.opponent.x < this.x)
+      angleDegre = angleDegre*-1;
+    var angleRadian = Math.PI*angleDegre/180;
+    var sina = Math.sin(angleRadian);
+    var cosa = Math.cos(angleRadian);
+    var x = this.x * cosa - this.y * sina;
+    var y = this.x * sina + this.y * cosa;
+    
+    if(x > 0 - canvas.offsetLeft && x + this.width < screen.width + canvas.offsetLeft)
+      this.x = x;
+    if(y > 0 - canvas.offsetTop && y+this.height < screen.height+canvas.offsetTop)
+      this.y = y;
+    log.message(x+"   "+y); 
+    this.enabled = true;       
+  }  
+
 }
 
 Circle.prototype = new LinearSprite();
