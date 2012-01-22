@@ -41,8 +41,8 @@ function moveSprites(){
 
 //triggered when mouse is moved
 function mousemove(evt){
-	player.setX(evt.clientX);
-	player.setY(evt.clientY);
+	player.setX(evt.clientX - canvas.offsetLeft);
+	player.setY(evt.clientY - canvas.offsetTop);
 	log.message("X : "+evt.clientX+"  Y : "+evt.clientY);
 }
 
