@@ -83,7 +83,7 @@ Player.prototype.setX = function(x){
 }
 
 Player.prototype.setY = function(y){
-	if(y + this.height < screen.heigth && this.y > 0)
+	if(y + this.height < screen.height && this.y > 0)
 		this.y = y;
 }
 
@@ -131,6 +131,8 @@ function moveSprites(){
 //triggered when mouse is moved
 function mousemove(evt){
 	player.setX(evt.clientX);
+	player.setY(evt.clientY);
+	log.message("X : "+evt.clientX+"  Y : "+evt.clientY);
 }
 
 //clean screen and draw it again
@@ -146,7 +148,9 @@ function animate(){
 function init(){
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");
-	return setInterval(animate, 10);
+  log = new Log;
+  log.message("test : "+canvas.offsetTop);	
+	return setInterval(animate, 1000/60);
 }
 
 	
@@ -170,7 +174,10 @@ circle.y = 50;
 var player = new Player;		
 
 //list of all sprites
-var sprites = new Array(square, square2, circle, player);
+var sprites = new Array(square, square2, circle, player);  
+var log;
+
+
 
 //window.addEventListener('keydown',function(evt){doKeyDown(evt, player)},false);
 window.addEventListener('mousemove',mousemove,false);
