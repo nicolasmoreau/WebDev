@@ -43,7 +43,6 @@ function moveSprites(){
 function mousemove(evt){
 	player.setX(evt.clientX - canvas.offsetLeft);
 	player.setY(evt.clientY - canvas.offsetTop);
-	log.message("X : "+evt.clientX+"  Y : "+evt.clientY);
 }
 
 //clean screen and draw it again
@@ -52,6 +51,7 @@ function animate(){
 	// draw
 	moveSprites();
 	plotSprites();
+	fleeing.distance(player);
 	
 }   	
 
@@ -60,7 +60,6 @@ function init(){
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");
   log = new Log;
-  log.message("test : "+canvas.offsetTop);	
 	return setInterval(animate, 1000/60);
 }
 
@@ -77,15 +76,19 @@ var screen = {
 var square = new Square;	
 var square2 = new Square;
 square2.y = 100;
-square2.isFull = true;
+square2.isFull  = true;
 var circle = new Circle;
 circle.y = 50;
+
+var fleeing = new FleeingSquare;
+fleeing.x = 50;
+fleeing.y = 50;
 
 //sprite moved by user
 var player = new Player;		
 
 //list of all sprites
-var sprites = new Array(square, square2, circle, player);  
+var sprites = new Array(square, square2, circle, player, fleeing);  
 var log;
 
 

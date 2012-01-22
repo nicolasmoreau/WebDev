@@ -47,6 +47,14 @@ Square.prototype.plot = function(){
 	else context.fill();
 }	
 
+function FleeingSquare(){};
+FleeingSquare.prototype = new Square();
+FleeingSquare.prototype.distance = function(sprite){
+  //log.message("test : "+this.x+ " "+sprite.x);
+  var distance = Math.sqrt(Math.pow(this.x - sprite.x, 2)+Math.pow(this.y - sprite.y, 2));
+  log.message(distance);
+}
+
 Circle.prototype = new LinearSprite();
 
 function Circle(){
