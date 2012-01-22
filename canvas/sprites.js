@@ -45,7 +45,28 @@ Square.prototype.plot = function(){
 	if(!this.isFull)
 		context.stroke();
 	else context.fill();
-}	
+}
+
+
+RotatingSquare.prototype = new Square;
+
+function RotatingSquare(){
+	this.angle = 0;
+}
+
+RotatingSquare.prototype.rotate = function(){
+	this.angle += (Math.PI / 180) * 1;
+}
+
+RotatingSquare.prototype.move = function(){
+	context.save();
+	context.translate(100, 100);
+	context.rotate(this.angle);
+	this.plot();
+	this.rotate();
+	context.restore();
+}
+	
 
 FleeingSquare.prototype = new Square;
         
