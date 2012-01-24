@@ -10,6 +10,7 @@ function init(){
     player.x = 250;
     player.y = 350;
     ball = new Ball();    
+    initBricks();
     return setInterval(draw, 1000/60);
 }
 
@@ -17,12 +18,22 @@ function draw(){
     context.clearRect(0, 0, screen.width, screen.height);
     player.plot();
     ball.plot();
+    
+    for(var i=0;i<bricks.length;i++)
+        bricks[i].plot();
 }
 
 //triggered when mouse is moved
 function mousemove(evt){
 	player.setX(evt.clientX - canvas.offsetLeft);
 	//player.setY(evt.clientY - canvas.offsetTop);
+}
+
+function initBricks(){
+    var brick1 = new Brick();
+    brick1.x = 150;
+    brick1.y = 150;
+    bricks.push(brick1);
 }
 
 
@@ -33,6 +44,7 @@ var context;
 var log;
 var player;
 var ball;
+var bricks = new Array();
 
 window.addEventListener('mousemove', mousemove);
 window.onload = function(){

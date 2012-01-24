@@ -4,7 +4,6 @@
 function Sprite(){
 	this.x = 0; 
 	this.y = 0;	
-	this.isFull = false;	
 	this.color = 'red';
 }
 
@@ -41,10 +40,14 @@ function Square(){
 Square.prototype.plot = function(){
 	context.beginPath();		
 	this.setColor();	
-	context.rect(this.x, this.y, this.height, this.width);
-	if(!this.isFull)
-		context.stroke();
-	else context.fill();
+	context.rect(this.x, this.y, this.width, this.height);
+    context.fill();
+}
+
+Brick.prototype = new Square();
+function Brick(){
+    this.width = 300;
+    this.height = 30;
 }
 
 //player
@@ -117,62 +120,80 @@ Ball.prototype.bordersCollision = function(){
     //    this.vectory = this.vectory * this.absorb;    
 }
 
-Ball.prototype.playerCollision = function(){
-    //collision with top of player
-    if(this.x + this.width > player.x && this.x < player.x + player.width){
-        if(this.y + this.height >= player.y && this.y + this.height <= player.y+player.height){  
-            log.message('coll top');          
+Ball.prototype.objectCollision = function(object){
+    //collision with left of object
+    if(this.x + this.width >= object.x && this.x+ this.width <= object.x+1){
+        if(this.y <= object.y+object.height && this.y >= object.y){
+            this.vectorx = -1 * this.vectorx;  
+            this.vectory = -1 * this.vectory;               
+            return true;
+        }
+    } 
+    
+    //collision with right of object
+    if(this.x  <= object.x + object.width && this.x >= object.x+object.width+1){
+        if(this.y <= object.y+object.height && this.y >= object.y){
+            this.vectorx = -1 * this.vectorx;  
+            this.vectory = -1 * this.vectory;               
+            return true;
+        }
+    }     
+    //collision with top of object
+    if(this.x + this.width > object.x && this.x < object.x + object.width){
+        if(this.y + this.height >= object.y && this.y + this.height <= object.y+object.height){    
             this.vectory = -1 * this.vectory;            
-            this.playerCollided = true;
-            return;
+            this.object = true;
+            return true;
         }
     }   
 
-    //collision with bottom of player
-    if(this.x + this.width > player.x && this.x < player.x + player.width){
-        if(this.y <= player.y+player.height && this.y >= player.y){
-            log.message('coll bottom');  
+    //collision with bottom of object
+    if(this.x + this.width > object.x && this.x < object.x + object.width){
+        if(this.y <= object.y+object.height && this.y >= object.y){
             this.vectory = -1 * this.vectory;            
-            this.playerCollided = true;
-            return;
+            this.object = true;
+            return true;
         }
-    } 
-    
-    //collision with left of player
-    if(this.x + this.width >= player.x && this.x+ this.width <= player.x+1){
-        if(this.y <= player.y+player.height && this.y >= player.y){
-            log.message('coll left');  
-            this.vectorx = -1 * this.vectorx;  
-            this.vectory = -1 * this.vectory;               
-            return;
-        }
-    } 
-    
-    //collision with right of player
-    if(this.x  <= player.x + player.width && this.x >= player.x+player.width+1){
-        if(this.y <= player.y+player.height && this.y >= player.y){
-            log.message('coll right');  
-            this.vectorx = -1 * this.vectorx;  
-            this.vectory = -1 * this.vectory;               
-            return;
-        }
-    } 
+    }     
+    return false;
 }
 
-Ball.prototype.move = function(){   
+
+Ball.prototype.move = function(){ 
+    var collision = false;    
+    for(var i = 0;i<bricks.length;i++){
+        collision = this.objectCollision(bricks[i]);
+        if(collision == true)
+            break;
+    }
+        
     //collision with player
-    this.playerCollision();
+    if(collision == false){        
+        collision = this.objectCollision(player);
+        if(collision == true)
+            this.playerCollided;
+    }
     //collision with borders
-    this.bordersCollision();   
+    if(collision == false)
+        collision = this.bordersCollision();   
     
+    log.message(player.toRight);
     //effects according to player movements    
     if(this.playerCollided){
-        if(!player.toRight)
-            if(this.vectorx > 0)
+        if(!player.toRight){
+            log.message("playerCollided");
+            if(this.vectorx > 0){
+                log.message("change direction");
                 this.vectorx = this.vectorx * -1;
-        if(player.toRight)
-            if(this.vectorx < 0)
+            }
+        }
+        if(player.toRight){
+            log.message("playerCollided");
+            if(this.vectorx < 0){
+                log.message("change direction");
                 this.vectorx = this.vectorx * -1;
+            }
+        }
     }
     
     this.y = this.y+this.vectory;  
