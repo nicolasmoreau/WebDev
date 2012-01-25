@@ -46,9 +46,22 @@ Square.prototype.plot = function(){
 
 Brick.prototype = new Square();
 function Brick(){
-    this.width = 300;
-    this.height = 30;
+    this.width = 50;
+    this.height = 20;
+    this.resistance = 2;  
+    this.hit=0; 
 }
+
+Brick.prototype.plot = function(){
+    context.save();
+	context.beginPath();	    
+	this.setColor();	
+	context.rect(this.x, this.y, this.width, this.height);
+    context.globalAlpha = 1-(this.hit/this.resistance);
+    context.fill();
+    context.restore();
+}
+
 
 //player
 Player.prototype = new Sprite();
@@ -161,36 +174,38 @@ Ball.prototype.objectCollision = function(object){
 
 Ball.prototype.move = function(){ 
     var collision = false;    
+    //collision with a block
     for(var i = 0;i<bricks.length;i++){
         collision = this.objectCollision(bricks[i]);
-        if(collision == true)
+        if(collision == true){
+            bricks[i].hit += 1;
+            log.message(bricks[i].resistance);
+            //remove this block
+            if(bricks[i].hit == bricks[i].resistance)
+                bricks.splice(i, 1);
             break;
+        }
     }
         
     //collision with player
     if(collision == false){        
         collision = this.objectCollision(player);
         if(collision == true)
-            this.playerCollided;
+            this.playerCollided = true;
     }
     //collision with borders
     if(collision == false)
         collision = this.bordersCollision();   
     
-    log.message(player.toRight);
     //effects according to player movements    
     if(this.playerCollided){
         if(!player.toRight){
-            log.message("playerCollided");
             if(this.vectorx > 0){
-                log.message("change direction");
                 this.vectorx = this.vectorx * -1;
             }
         }
         if(player.toRight){
-            log.message("playerCollided");
             if(this.vectorx < 0){
-                log.message("change direction");
                 this.vectorx = this.vectorx * -1;
             }
         }

@@ -14,13 +14,24 @@ function init(){
     return setInterval(draw, 1000/60);
 }
 
+function message(text, x, y){
+	context.fillStyle = '#000';
+	context.font = "24px Helvetica";
+	context.textAlign = "left";
+	context.textBaseline = "top";
+	context.fillText(text, x, y);
+}
+
 function draw(){
     context.clearRect(0, 0, screen.width, screen.height);
-    player.plot();
-    ball.plot();
-    
-    for(var i=0;i<bricks.length;i++)
-        bricks[i].plot();
+    if(bricks.length > 0){
+        player.plot();
+        ball.plot();        
+        for(var i=0;i<bricks.length;i++)
+            bricks[i].plot();
+    }else{
+        message("Over", (canvas.width/2)-canvas.offsetLeft, (canvas.height/2)-canvas.offsetTop);
+    }
 }
 
 //triggered when mouse is moved
@@ -30,12 +41,14 @@ function mousemove(evt){
 }
 
 function initBricks(){
-    var brick1 = new Brick();
-    brick1.x = 150;
-    brick1.y = 150;
-    bricks.push(brick1);
+    var list = new Array([10, 10], [100, 100]);
+    for(var i = 0; i<list.length; i++){
+        brick = new Brick();
+        brick.x = list[i][0];
+        brick.y = list[i][1];
+        bricks.push(brick);
+    }
 }
-
 
 
 var screen;
