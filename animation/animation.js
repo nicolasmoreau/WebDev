@@ -52,32 +52,30 @@ function updateSprite(toRight){
         playerX = playerX - 3;
     }
     
-    context.drawImage(image, 32+(currentFrame-1)*width, currentLine, width, 40, playerX, 50, 32, 40 );   
+    context.drawImage(image, 32+(currentFrame-1)*width, currentLine, width, 40, playerX, 50, 32, 40 ); 
     //context.drawImage(image, 32+(frameToLeft-1)*width, 77, width, 40, 50, 50, 32, 40 ); 
 }
 
 //clean screen and draw it again
 function animate(){             
 	context.clearRect(0, 0, screen.width, screen.height);
+    context.globalCompositeOperation = 'lighter';   // Where both shapes overlap the color is determined by adding color values.
 	// draw
+    updateSprite(toRight);
 	if(backgroundY>-880){     	
         backgroundY = backgroundY-1;
 	}    	 
-	context.drawImage(background, 0, backgroundY);    
+	context.drawImage(background, 0, backgroundY); 
     
-    updateSprite(toRight);   
-    
-
-	
 
 }   	
 
 //init canvas
 function init(){
-	canvas = document.getElementById("canvas");
+	canvas = document.getElementById("canvas");    
 	context = canvas.getContext("2d");
     log = new Log;
-	return setInterval(animate, 1000/10);
+	return setInterval(animate, 1000/15);
 }
 
 	
