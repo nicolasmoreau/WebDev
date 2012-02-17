@@ -12,15 +12,39 @@ var player = {
     y : 50,
     isMovingLeft : false,
     isMovingRight : false,    
+    isJumping : false,
+    jumpTimer : 5,
+    currentJump : 0,
    
     goToRight : function(){
         this.x = this.x+3;
-        this.sprite.goToRight();
+        if(this.isJumping == false)
+            this.sprite.goToRight();
     },
     
     goToLeft : function(){
         this.x = this.x-3;
-        this.sprite.goToLeft();
+        if(this.isJumping == false)
+            this.sprite.goToLeft();
+    },
+    
+    jump : function(){
+        this.sprite.jump();        
+        if(this.isMovingLeft)
+            this.goToLeft();
+        if(this.isMovingRight)
+            this.goToRight();
+    },
+    
+    lauchJumpTimer : function(){
+        this.isJumping = true;
+        this.currentJump = this.jumpTimer;
+    },
+    
+    decreaseJumpTimer : function(){        
+        this.currentJump = this.currentJump -1;
+        if(this.currentJump <= 0)
+            this.isJumping = false;
     },
     
     sprite : {
@@ -47,7 +71,7 @@ var player = {
             this.toLeft = true;
             this.toRight = false;
             
-            if (this.frameToLeft == 5){
+            if (this.frameToLeft <= 5){
                this. frameToLeft = 10;
             }else
                 this.frameToLeft = this.frameToLeft - 1;    
@@ -58,12 +82,22 @@ var player = {
             this.toLeft = false;
             this.toRight = true;        
             
-            if (this.frameToRight == 6){
+            if (this.frameToRight >= 6){
                 this.frameToRight = 1;
             }else
                 this.frameToRight = this.frameToRight + 1;
             this.currentFrame = this.frameToRight;
         },  
+        
+        jump : function(){
+            if(this.toLeft){
+                this.frameToLeft = 2;
+                this.currentFrame = this.frameToLeft;
+            }else if(this.toRight){
+                this.frameToRight = 9;
+                this.currentFrame = this.frameToRight;
+            }        
+        },
         
         getCaseX : function(){
             return 32+(this.currentFrame-1)*this.caseWidth;
@@ -98,7 +132,14 @@ function doKeyDown(evt){
             player.isMovingLeft = false;
             player.isMovingRight = true;
 			break;
+	}
+}
+
+//manage keyboard input
+function doKeyPressed(evt){
+	switch (evt.keyCode) {
 		case 32:  // space bar was pressed 
+            player.lauchJumpTimer();
 			break;
 	}
 }
@@ -124,8 +165,12 @@ function doKeyUp(evt){
 
 function updateSprite(){
     var image = player.sprite.getImage();
-    
-    if(player.isMovingLeft)
+
+    if(player.isJumping){
+        player.jump();   
+        player.decreaseJumpTimer();
+    }
+    else if(player.isMovingLeft)
         player.goToLeft();
     else if(player.isMovingRight)
         player.goToRight();
@@ -155,6 +200,7 @@ function init(){
 
 window.addEventListener('keydown',function(evt){doKeyDown(evt)},false);
 window.addEventListener('keyup',function(evt){doKeyUp(evt)},false);
+window.addEventListener('keypress',function(evt){doKeyPressed(evt)},false);
 //window.addEventListener('mousemove',mousemove,false);
 window.onload=function(){
 	init();
