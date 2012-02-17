@@ -1,15 +1,17 @@
 //manage keyboard input
-function doKeyPressed(evt){
+function doKeyDown(evt){
 	switch (evt.keyCode) {
-		case 38:  /* Up arrow was pressed */
+		case 38:  // Up arrow was pressed 
 			break;
-		case 40:  /* Down arrow was pressed */
+		case 40:  // Down arrow was pressed 
 			break;
-		case 37:  /* Left arrow was pressed */
+		case 37:  // Left arrow was pressed 
             toLeft = true;
 			break;
-		case 39:  /* Right arrow was pressed */
+		case 39:  // Right arrow was pressed 
             toRight = true;
+			break;
+		case 32:  // space bar was pressed 
 			break;
 	}
 }
@@ -17,15 +19,15 @@ function doKeyPressed(evt){
 
 //manage keyboard input
 function doKeyUp(evt){
-	switch (evt.keyCode) {
-		case 38:  /* Up arrow was pressed */
+	switch (evt.keyCode) {        
+		case 38:  
 			break;
-		case 40:  /* Down arrow was pressed */
+		case 40:  
 			break;
-		case 37:  /* Left arrow was pressed */
+		case 37:  
             toLeft = false;
 			break;
-		case 39:  /* Right arrow was pressed */
+		case 39:  
             toRight = false;
 			break;
 	}
@@ -102,8 +104,7 @@ background.src="background.jpg";
 var backgroundY=0;
 
 
-
-window.addEventListener('keypress',function(evt){doKeyPressed(evt)},false);
+window.addEventListener('keydown',function(evt){doKeyPressed(evt)},false);
 window.addEventListener('keyup',function(evt){doKeyUp(evt)},false);
 //window.addEventListener('mousemove',mousemove,false);
 window.onload=function(){
